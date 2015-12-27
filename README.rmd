@@ -1,0 +1,75 @@
+---
+title: "Project 1- Creating a tidy dataset"
+author: "Rich"
+date: "Sunday, December 27, 2015"
+output: html_document
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r message=FALSE,include=TRUE,warning = FALSE}
+library(plyr)
+library(doBy)
+library(dplyr)
+```
+
+First we'll read the features txt which lists the types of masurements of activity and turn those values into a list
+
+```{r}
+feat <- read.table("features.txt")
+features <- c(feat)
+
+
+```
+Now, I am going to merge all of the datasets (training ,test and subject). The end result will be a table called __big__ which will contain all of the training and test measurements tied to their respective subject.
+```{r}
+testx <- read.table("test/X_test.txt", col.names= feat[,2])
+trainx <- read.table("train/X_train.txt", col.names = feat[,2])
+testall <- cbind(testx, testy)
+
+
+testy <- read.table("test/y_test.txt", col.names= "Activity")
+trainy <- read.table("train/y_train.txt", col.names = "Activity")
+trainall <- cbind(trainx, trainy)
+
+subtest <- read.table("test/subject_test.txt", col.names= "Subject")
+subtrain <- read.table("train/subject_train.txt", col.names = "Subject")
+suball <- rbind(subtest, subtrain)
+
+df <- merge(testall,trainall,all=TRUE)
+big <- cbind(df,suball)
+
+```
+
+Next, I'm going to subset the variables that only relate to measuremetns of mean and standard deviation. That will result in a new dataframe (__df_sub__) with only fields relating to those measuremetns. Once that has been created I will create a new variable called _act_r which contains the descriptive type of activity.
+
+```{r}
+df_sub <- big[,grep("mean|std|Activity|Subject", colnames(big))]
+
+ 
+  df_sub$act_r <- factor(df_sub$Activity,
+                       levels = c(1,2,3,4,5,6),
+                       labels = c("WALKING", "WALKING_UPSTAIRS","WALKING_DOWNSTAIRS", "SITTING", "STANDING", "LAYING"))
+```
+To make the dataset a little cleaner I'm going to rename the activity variable to _Activity.Label_ . Then i'm going to craete a new dataframe (__df3__) which groups by Suject and then Activity the "mean" of the type of activity. Finally, after one last piece of cleaning up (removing the original Activity column since we already have the labels in there), I will write this table to a tidy_project1.txt file. 
+```{r}
+names(df_sub)[82]<-"Activity.Label"
+
+
+df3 <- df_sub %>% group_by(Subject, Activity.Label) %>% summarise_each(funs(mean))
+df3 <- df3[,-82]
+write.table(df3,"tidy_project1.txt", row.name=FALSE)
+
+
+```
+
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

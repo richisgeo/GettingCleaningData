@@ -33,16 +33,19 @@ colnames(df_sub)
                        levels = c(1,2,3,4,5,6),
                        labels = c("WALKING", "WALKING_UPSTAIRS","WALKING_DOWNSTAIRS", "SITTING", "STANDING", "LAYING"))
 
-colnames(df_sub)
+head(colnames(df_sub), 5)
 
 
 names(df_sub)[82]<-"Activity.Label"
-colnames(df_sub)
 
 
-df2 <- df_sub %>% group_by(Subject, Activity) %>% summarise_each(funs(mean), -c(Activity,Activity.Label))
+df3 <- df_sub %>% group_by(Subject, Activity.Label) %>% summarise_each(funs(mean))
+df3 <- df3[,-82]
+write.table(df3,"tidy_project1.txt", row.name=FALSE)
 
-write.table(df2,"tidy_project1.txt", row.name=FALSE)
+
+
+
 
 
 
