@@ -15,7 +15,7 @@ output: html_document
 
 
 ## A label describing the activity
-2.    activity_label
+2.    Activity.Label
 
 
 ## The next columns are means across ALL observations for a measurement by activity and arranged by subject.
