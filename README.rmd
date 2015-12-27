@@ -63,5 +63,8 @@ write.table(df3,"tidy_project1.txt", row.name=FALSE)
 
 ```
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 970f3f053b3982c836a608a95e2f69e675937eac
