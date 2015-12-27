@@ -10,12 +10,12 @@ output: html_document
  This code book is for the `tidy_project1.txt` file which was created using `run_analysis.R`. 
 
 #### A numeric value (from 1 to 30) which represents the subject that the measurements correspond to
-1.    Subject
+1:    Subject
 
 
 
 #### A label describing the activity
-2.    Activity.Label
+2:    Activity.Label
 
 
 ## The next columns are means across ALL observations for a measurement by activity and arranged by subject.
